@@ -18,13 +18,23 @@ using Microsoft.Extensions.Logging;
 
 namespace ProfilesApp
 {
+
+    public static class Configuration
+    {
+        private static IConfiguration _configuration;
+        public static void Set(IConfiguration configuration) {
+            _configuration = configuration;
+        }
+        public static IConfiguration Get() {
+            return _configuration;
+        }
+    }
     // delegates which control app configuration
     public class Startup
     {
-				public IConfiguration Configuration { get; }
         public Startup(IConfiguration configuration)
         {
-            Configuration = configuration;
+            ProfilesApp.Configuration.Set(configuration);
         }
 
         // add services to container
@@ -33,16 +43,21 @@ namespace ProfilesApp
             // router
             services.AddRouting();
 						services.AddAuthentication(options => {
-								options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-								options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-								options.DefaultChallengeScheme = OpenIdConnectDefaults.AuthenticationScheme;
+								options.DefaultAuthenticateScheme =
+                  CookieAuthenticationDefaults.AuthenticationScheme;
+								options.DefaultSignInScheme =
+                  CookieAuthenticationDefaults.AuthenticationScheme;
+								options.DefaultChallengeScheme =
+                  OpenIdConnectDefaults.AuthenticationScheme;
 						})
                 .AddCookie()
                 .AddOpenIdConnect(options => {
                     // `dotnet user-secrets set 'AAD:ClientID' '<client_id>'
                     // `dotnet user-secrets set 'AAD:ClientSecret' '<client_secret>'
-                    options.ClientId = Configuration["AAD:ClientId"];
-                    options.ClientSecret = Configuration["AAD:ClientSecret"];
+                    options.ClientId =
+                      ProfilesApp.Configuration.Get()["AAD:ClientId"];
+                    options.ClientSecret =
+                      ProfilesApp.Configuration.Get()["AAD:ClientSecret"];
                     options.CallbackPath = new PathString("/signin");
                     options.MetadataAddress = "https://login.microsoftonline.com/common/v2.0/.well-known/openid-configuration";
                     // issuer: https://login.microsoftonline.com/9188040d-6c67-4c5b-b112-36a304b66dad/v2.0
