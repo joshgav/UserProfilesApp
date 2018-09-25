@@ -1,0 +1,9 @@
+group_name=joshgav-profilesapp-group
+location=westus2
+
+cosmosdb_account_name=joshgavprofilesapp
+cosmosdb_db_name=profilesapp
+cosmosdb_collection_name=profiles
+
+storage_account_name=joshgavprofilesappstor
+storage_container_name=pictures
