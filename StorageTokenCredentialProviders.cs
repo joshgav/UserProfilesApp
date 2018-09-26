@@ -21,11 +21,14 @@ namespace ProfilesApp
         private String redirectUri = "https://localhost:5001/signin";
 
         private String blobUri;
-        private List<String> scopes = new List<String>() { "https://storage.azure.com/.default" };
+        private List<String> scopes = new List<String>() {
+          "https://storage.azure.com/.default" };
 
         public async Task<TokenCredential> GetTokenCredentialAsync() {
-            clientId = ProfilesApp.Configuration.Get()["AAD:ClientID"];
-            clientSecret = ProfilesApp.Configuration.Get()["AAD:ClientSecret"];
+            // `dotnet user-secrets set 'Azure:DirectoryV1:ClientId' '<client_id>'
+            // `dotnet user-secrets set 'Azure:DirectoryV1:ClientSecret' '<client_secret>'
+            clientId = ProfilesApp.Configuration.Get()["Azure:DirectoryV1:ClientId"];
+            clientSecret = ProfilesApp.Configuration.Get()["Azure:DirectoryV1:ClientSecret"];
             var clientCredential = new ClientCredential(clientSecret);
 
             var authentication = new ConfidentialClientApplication(
@@ -35,16 +38,17 @@ namespace ProfilesApp
                 userTokenCache: null,
                 appTokenCache: null
             );
-            var result = await authentication.AcquireTokenForClientAsync(scopes);
+            var authResult = await authentication.AcquireTokenForClientAsync(scopes);
+            System.Console.Write($"access token: {authResult.AccessToken}");
 
             var tokenCred = new TokenCredential(
-                result.AccessToken,
+                authResult.AccessToken,
                 async (state, cancellationToken) => {
                     var newResult = await authentication.AcquireTokenForClientAsync(scopes);
                     return new NewTokenAndFrequency(newResult.AccessToken);
                 },
-                null,
-                TimeSpan.FromSeconds(60)
+                null,  // state object
+                TimeSpan.FromSeconds(60) // refresh frequency
             );
             return tokenCred;
         }

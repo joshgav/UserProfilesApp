@@ -52,7 +52,7 @@ namespace ProfilesApp
             // check for picture and upload to blob store
             if (formData.Files.Any()) {
                 var stream = formData.Files.First().OpenReadStream();
-                var pictures = new Pictures();
+                var pictures = new Pictures(context);
                 var pictureUrl = await pictures.PutPicture(updatedProfile.Id, stream);
                 updatedProfile.PictureUrl = await pictures.GetPictureUrl(updatedProfile.Id);
             }

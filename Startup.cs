@@ -60,12 +60,12 @@ namespace ProfilesApp
 						})
                 .AddCookie()
                 .AddOpenIdConnect(options => {
-                    // `dotnet user-secrets set 'AAD:ClientID' '<client_id>'
-                    // `dotnet user-secrets set 'AAD:ClientSecret' '<client_secret>'
+                    // `dotnet user-secrets set 'Azure:DirectoryV2:ClientId' '<client_id>'
+                    // `dotnet user-secrets set 'Azure:DirectoryV2:ClientSecret' '<client_secret>'
                     options.ClientId =
-                      ProfilesApp.Configuration.Get()["AAD:ClientId"];
+                      ProfilesApp.Configuration.Get()["Azure:DirectoryV2:ClientId"];
                     options.ClientSecret =
-                      ProfilesApp.Configuration.Get()["AAD:ClientSecret"];
+                      ProfilesApp.Configuration.Get()["Azure:DirectoryV2:ClientSecret"];
                     options.CallbackPath = new PathString("/signin");
                     options.MetadataAddress = "https://login.microsoftonline.com/common/v2.0/.well-known/openid-configuration";
                     // issuer: https://login.microsoftonline.com/9188040d-6c67-4c5b-b112-36a304b66dad/v2.0

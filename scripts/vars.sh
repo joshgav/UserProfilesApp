@@ -7,3 +7,6 @@ cosmosdb_collection_name=profiles
 
 storage_account_name=joshgavprofilesappstor
 storage_container_name=pictures
+
+directory_app_name=joshgav-profiles-app
+directory_app_identifier="https://${directory_app_name}"
