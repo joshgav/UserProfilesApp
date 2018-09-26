@@ -1,0 +1,27 @@
+@{ Layout = "_Layout"; }
+
+<p>Hello @Model.FullName! ID: @Model.Id.</p>
+
+<form name="profileData"
+      method="post"
+      action=""
+      target="_self"
+      enctype="multipart/form-data">
+
+  <label for="id">ID</label>
+  <input type="text" id="id" readonly value="@Model.Id" />
+
+  <label for="fullName">Full name</label>
+  <input type="text" id="fullName" name="fullName" value="@Model.FullName" />
+
+  <label for="email">Email</label>
+  <input type="email" id="email" name="email" value="@Model.Email" />
+
+  <label for="picture">Picture</label>
+  <img src="@Model.PictureUrl" />
+  <input type="file" id="picture" name="picture" accept="image/*"/>
+
+  <input type="hidden" id="etag" name="etag" value="@Model.Etag" />
+
+	<input type="submit" value="Update Profile" />
+</form>
