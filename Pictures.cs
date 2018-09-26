@@ -12,27 +12,26 @@ namespace ProfilesApp
 {
     public class Pictures
     {
-				private CloudBlobContainer container;
 				private String picturesContainerName = "pictures";
+				private CloudBlobContainer container;
 
         public Pictures() {
             IStorageTokenCredentialProvider provider = new StorageEnvironmentTokenCredentialProvider();
-            StorageCredentials credential = new StorageCredentials(provider.GetTokenCredential());
-
-						var blobs = new CloudBlobClient(provider.GetBlobEndpoint(), credential);
-            // ensure container
-						container = blobs.GetContainerReference(picturesContainerName);
+            StorageCredentials credential = new StorageCredentials(provider.GetTokenCredentialAsync().Result);
+            container = new CloudBlobContainer(new Uri(string.Format("{0}/{1}", provider.GetBlobEndpoint(), picturesContainerName)), credential);
         }
         
-        public async Task<Uri> PutPicture([]byte fileStream) {
-						string filename = "";
-            CloudBlockBlob blockBlob = container.GetBlockBlobReference(fileName);
-            await blockBlob.UploadFromStreamAsync(fileStream);
-            return await Task.FromResult(true);
+        public async Task<String> PutPicture(string filename, System.IO.Stream filebytes) {
+            CloudBlockBlob blockBlob = container.GetBlockBlobReference(filename);
+            await blockBlob.UploadFromStreamAsync(filebytes);
+            // this URI will be stored with profile, without SAS token appended
+            return await Task.FromResult(blockBlob.Uri.ToString());
         }
 
-        public async Task<Uri> GetPictureUrl(string profileId) {
-
+        public async Task<String> GetPictureUrl(string filename) {
+            CloudBlockBlob blockBlob = container.GetBlockBlobReference(filename);
+            // TODO: add SAS token to returned URI
+            return await Task.FromResult(blockBlob.Uri.ToString());
         }
     }
 }

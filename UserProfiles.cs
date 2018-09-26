@@ -9,13 +9,13 @@ using Newtonsoft.Json;
 
 namespace ProfilesApp
 {
-    public class UserProfilesCollection
+    public class UserProfiles
 		{
         private const string cosmosdb_db_name = "profilesapp";
         private const string cosmosdb_coll_name = "profiles";
         private DocumentClient _client;
 
-        public UserProfilesCollection() {
+        public UserProfiles() {
             ICosmosDBKeyProvider keyProvider = new CosmosDBEnvironmentKeyProvider();
 
             if (_client == null) {
@@ -100,5 +100,8 @@ namespace ProfilesApp
 
         [JsonProperty("external_identifier")]
         public String ExternalIdentifier { get; set; }
+
+        [JsonProperty("picture_url")]
+        public String PictureUrl { get; set; }
     }
 }
