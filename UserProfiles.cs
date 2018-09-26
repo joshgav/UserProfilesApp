@@ -10,7 +10,7 @@ using Newtonsoft.Json;
 namespace ProfilesApp
 {
     public class UserProfiles
-		{
+    {
         private const string cosmosdb_db_name = "profilesapp";
         private const string cosmosdb_coll_name = "profiles";
         private DocumentClient _client;
@@ -23,10 +23,10 @@ namespace ProfilesApp
                     new Uri(keyProvider.GetEndpoint()),
                     keyProvider.GetAccountKey());
             }
-						this.CreateCollectionIfNotExistsAsync().Wait();
+            this.CreateCollectionIfNotExistsAsync().Wait();
         }
 
-			  public async Task CreateCollectionIfNotExistsAsync()
+        public async Task CreateCollectionIfNotExistsAsync()
         {
             DocumentCollection collection = new DocumentCollection();
 
@@ -42,7 +42,7 @@ namespace ProfilesApp
         public async Task<UserProfile> GetProfileAsync(String profileId)
         {
             Uri documentUri = UriFactory.CreateDocumentUri(
-							cosmosdb_db_name, cosmosdb_coll_name, profileId);
+                cosmosdb_db_name, cosmosdb_coll_name, profileId);
 
             return await _client.ReadDocumentAsync<UserProfile>(
                 documentUri, 
@@ -52,14 +52,14 @@ namespace ProfilesApp
         public async Task AddProfileAsync(UserProfile profile)
         {
             Uri collectionUri = UriFactory.CreateDocumentCollectionUri(
-							cosmosdb_db_name, cosmosdb_coll_name);
+                cosmosdb_db_name, cosmosdb_coll_name);
             await _client.UpsertDocumentAsync(collectionUri, profile);
         }
 
         public async Task RemoveProfileAsync(String profileId)
         {
             Uri documentUri = UriFactory.CreateDocumentUri(
-							cosmosdb_db_name, cosmosdb_coll_name, profileId);
+                cosmosdb_db_name, cosmosdb_coll_name, profileId);
 
             await _client.DeleteDocumentAsync(
                 documentUri,
@@ -69,19 +69,19 @@ namespace ProfilesApp
         public async Task UpdateProfileAsync(UserProfile updatedProfile)
         {
             Uri documentUri = UriFactory.CreateDocumentUri(
-							cosmosdb_db_name, cosmosdb_coll_name, updatedProfile.Id);
+                cosmosdb_db_name, cosmosdb_coll_name, updatedProfile.Id);
 
             UserProfile originalProfile = await _client.ReadDocumentAsync<UserProfile>(
                 documentUri,
                 new RequestOptions { PartitionKey =
-									new PartitionKey(updatedProfile.Id) });
+                    new PartitionKey(updatedProfile.Id) });
 
             AccessCondition condition = new AccessCondition {
-							Condition = originalProfile.Etag, Type = AccessConditionType.IfMatch };
+                Condition = originalProfile.Etag, Type = AccessConditionType.IfMatch };
             await _client.ReplaceDocumentAsync(
-							documentUri,
-              updatedProfile,
-							new RequestOptions { AccessCondition = condition });
+                documentUri,
+                updatedProfile,
+                new RequestOptions { AccessCondition = condition });
         }
     }
 

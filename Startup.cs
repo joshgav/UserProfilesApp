@@ -47,38 +47,38 @@ namespace ProfilesApp
         public void ConfigureServices(IServiceCollection services)
         {
             // router
-						ConfigureRenderingServices(services, "");
+            ConfigureRenderingServices(services, "");
             services.AddScoped<IViewRenderService, ViewRenderService>();
             services.AddRouting();
-						services.AddAuthentication(options => {
-								options.DefaultAuthenticateScheme =
-                  CookieAuthenticationDefaults.AuthenticationScheme;
-								options.DefaultSignInScheme =
-                  CookieAuthenticationDefaults.AuthenticationScheme;
-								options.DefaultChallengeScheme =
-                  OpenIdConnectDefaults.AuthenticationScheme;
-						})
-                .AddCookie()
-                .AddOpenIdConnect(options => {
-                    // `dotnet user-secrets set 'Azure:DirectoryV2:ClientId' '<client_id>'
-                    // `dotnet user-secrets set 'Azure:DirectoryV2:ClientSecret' '<client_secret>'
-                    options.ClientId =
-                      ProfilesApp.Configuration.Get()["Azure:DirectoryV2:ClientId"];
-                    options.ClientSecret =
-                      ProfilesApp.Configuration.Get()["Azure:DirectoryV2:ClientSecret"];
-                    options.CallbackPath = new PathString("/signin");
-                    options.MetadataAddress = "https://login.microsoftonline.com/common/v2.0/.well-known/openid-configuration";
-                    // issuer: https://login.microsoftonline.com/9188040d-6c67-4c5b-b112-36a304b66dad/v2.0
-                    options.TokenValidationParameters.ValidateIssuer = false;
-                    options.Scope.Add("User.Read");
-                    options.Scope.Add("openid");
-                    options.Scope.Add("profile");
-                    options.Scope.Add("email");
-                    options.Scope.Add("offline_access");
-                });
+            services.AddAuthentication(options => {
+                options.DefaultAuthenticateScheme =
+                    CookieAuthenticationDefaults.AuthenticationScheme;
+                options.DefaultSignInScheme =
+                    CookieAuthenticationDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme =
+                    OpenIdConnectDefaults.AuthenticationScheme;
+            })
+            .AddCookie()
+            .AddOpenIdConnect(options => {
+                // `dotnet user-secrets set 'Azure:DirectoryV2:ClientId' '<client_id>'
+                // `dotnet user-secrets set 'Azure:DirectoryV2:ClientSecret' '<client_secret>'
+                options.ClientId =
+                    ProfilesApp.Configuration.Get()["Azure:DirectoryV2:ClientId"];
+                options.ClientSecret =
+                    ProfilesApp.Configuration.Get()["Azure:DirectoryV2:ClientSecret"];
+                options.CallbackPath = new PathString("/signin");
+                options.MetadataAddress = "https://login.microsoftonline.com/common/v2.0/.well-known/openid-configuration";
+                // issuer: https://login.microsoftonline.com/9188040d-6c67-4c5b-b112-36a304b66dad/v2.0
+                options.TokenValidationParameters.ValidateIssuer = false;
+                options.Scope.Add("User.Read");
+                options.Scope.Add("openid");
+                options.Scope.Add("profile");
+                options.Scope.Add("email");
+                options.Scope.Add("offline_access");
+            });
         }
 
-				// configure the HTTP request pipeline
+        // configure the HTTP request pipeline
         public void Configure(IApplicationBuilder app, IHostingEnvironment env) {
             var logger = app.ApplicationServices.GetRequiredService<ILogger<IWebHost>>();
             if (env.IsDevelopment()) {
@@ -89,7 +89,7 @@ namespace ProfilesApp
             // default handler
             var routeBuilder = new RouteBuilder(app, new RouteHandler(Server.DefaultRequestDelegate));
             routeBuilder.MapGet("hello", Server.RenderProfilePage);
-						routeBuilder.MapPost("hello", Server.PostProfileForm);
+            routeBuilder.MapPost("hello", Server.PostProfileForm);
             routeBuilder.MapRoute("root", "/");
 
             var routes = routeBuilder.Build();

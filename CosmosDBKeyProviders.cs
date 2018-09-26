@@ -24,7 +24,7 @@ namespace ProfilesApp
         // `dotnet user-secrets set 'Azure:CosmosDB:Endpoint' <>`
             cosmosdb_key = ProfilesApp.Configuration.Get()["Azure:CosmosDB:Key"];
             cosmosdb_endpoint =
-              ProfilesApp.Configuration.Get()["Azure:CosmosDB:Endpoint"];
+                ProfilesApp.Configuration.Get()["Azure:CosmosDB:Endpoint"];
         }
 
         String ICosmosDBKeyProvider.GetAccountKey() {

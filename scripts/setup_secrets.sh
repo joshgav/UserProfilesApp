@@ -25,8 +25,8 @@ storage_account_id=$(az storage account show \
   --output tsv --query id 2> /dev/null)
 
 storage_blob_uri=$(az storage account show \
-	--ids $storage_account_id \
-	--query 'primaryEndpoints.blob' --output tsv)
+  --ids $storage_account_id \
+  --query 'primaryEndpoints.blob' --output tsv)
 
 dotnet user-secrets set 'Azure:Storage:Blob:Endpoint' $storage_blob_uri
 

@@ -24,7 +24,7 @@ if [ -z "$storage_account_id" ]; then
 fi
 
 storage_blob_uri=$(az storage account show \
-	--ids $storage_account_id \
-	--query 'primaryEndpoints.blob' --output tsv)
+  --ids $storage_account_id \
+  --query 'primaryEndpoints.blob' --output tsv)
 
 echo "Storage URI: [${storage_blob_uri}]"

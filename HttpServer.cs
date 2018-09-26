@@ -69,7 +69,7 @@ namespace ProfilesApp
 
             if (!context.User.Identity.IsAuthenticated) {
                 await context.ChallengeAsync();
-								return new UserProfile();
+                return new UserProfile();
             }
 
             ClaimsPrincipal principal = (ClaimsPrincipal)context.User;

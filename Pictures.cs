@@ -18,8 +18,8 @@ namespace ProfilesApp
 {
     public class Pictures
     {
-				private String picturesContainerName = "pictures";
-				private CloudBlobContainer container;
+        private String picturesContainerName = "pictures";
+        private CloudBlobContainer container;
         private ILogger logger;
 
         public Pictures(HttpContext context) {
