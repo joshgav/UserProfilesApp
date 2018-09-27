@@ -47,11 +47,13 @@ namespace ProfilesApp
         
         public async Task<String> PutPicture(string filename, System.IO.Stream filebytes) {
             CloudBlockBlob blockBlob = container.GetBlockBlobReference(filename);
+            Console.WriteLine($"going to put stream {blockBlob.Uri.ToString()}");
             await blockBlob.UploadFromStreamAsync(filebytes);
             // this URI will be stored with profile, without SAS token appended
             return blockBlob.Uri.ToString();
         }
 
+        #pragma warning disable 1998
         public async Task<String> GetPictureUrl(string filename) {
             CloudBlockBlob blockBlob = container.GetBlockBlobReference(filename);
             // TODO: add SAS token to returned URI

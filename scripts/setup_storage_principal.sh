@@ -2,7 +2,10 @@
 
 script_dir=$(cd $(dirname "${BASH_SOURCE[0]}") && pwd)
 source ${script_dir}/vars.sh
+
 generate_new_password=${1:-"false"}
+user_secrets=${2:-"false"}
+keyvault_secrets=${3:-"false"}
 
 group_id=$(az group show --name $group_name --output tsv --query id)
 if [ -z $group_id ]; then
@@ -33,14 +36,26 @@ if [ -z $sp_id ]; then
     --query 'appId' --output tsv)
 fi
 
-if [ "$generate_new_password" = "true" ]; then
+if [ "$generate_new_password" = "generate_new_password" ]; then
   new_password=$(uuidgen)
   az ad app update \
     --id $directory_app_identifier \
     --password $new_password
-  echo "Password: $new_password"
-  dotnet user-secrets set 'Azure:DirectoryV1:ClientId' "$sp_id"
-  dotnet user-secrets set 'Azure:DirectoryV1:ClientSecret' "$new_password"
+  echo "App secret: $new_password"
+  if [ "$user_secrets" = "user_secrets" ]; then
+    dotnet user-secrets set 'Azure:DirectoryV1:ClientId' "$sp_id"
+    dotnet user-secrets set 'Azure:DirectoryV1:ClientSecret' "$new_password"
+  fi
+  if [ "$keyvault_secrets" = "keyvault_secrets" ]; then
+    az keyvault secret set \
+      --vault-name $keyvault_name \
+      --name 'Azure--DirectoryV1--ClientId' \
+      --value "$sp_id"
+    az keyvault secret set \
+      --vault-name $keyvault_name \
+      --name 'Azure--DirectoryV1--ClientSecret' \
+      --value "$new_password"
+  fi
 fi
 
 # Link: https://docs.microsoft.com/en-us/azure/role-based-access-control/built-in-roles#storage-blob-data-contributor-preview
@@ -61,5 +76,3 @@ if [ -z $role_assignment_id ]; then
 fi
 
 echo "App ID: $app_id"
-echo "Service Principal ID: $sp_id"
-echo "Role Assignment ID: $role_assignment_id"

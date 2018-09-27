@@ -106,9 +106,6 @@ the following ways. Implementation of these is tracked in
 [#2](https://github.com/joshgav/UserProfilesApp/issues/2).
 
 * Get CosmosDB account key from Key Vault using service principal.
-* Replace service principal with managed identity:
-  * Get CosmosDB account key from Key Vault using managed identity.
-  * Get Blob Storage token using managed identity.
-* Get CosmosDB account key from Azure RM using managed identity (avoid Key
-  Vault).
-
+* Get CosmosDB account key from Key Vault using managed identity.
+* Get Blob Storage token using managed identity.
+* Get CosmosDB account key from Azure RM using managed identity.

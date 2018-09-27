@@ -1,0 +1,10 @@
+#cloud-config
+runcmd:
+- wget -q https://packages.microsoft.com/config/ubuntu/18.04/packages-microsoft-prod.deb && dpkg -i packages-microsoft-prod.deb
+- apt update
+- apt install dotnet-sdk-2.1 --yes
+- mkdir -p /app
+- chown --recursive 1000:1000 /app
+- chown --recursive 1000:1000 /usr/share/dotnet/sdk/NuGetFallbackFolder
+- git clone https://github.com/joshgav/UserProfilesApp /app
+- AZURE__KEYVAULTACCESSOR__ENDPOINT=https://profiles-keyvault.vault.azure.net dotnet run --project /app

@@ -49,14 +49,14 @@ namespace ProfilesApp
                 Email = formData["email"],
             };
 
+            var pictures = new Pictures(context);
             // check for picture and upload to blob store
             if (formData.Files.Any()) {
+                System.Console.WriteLine($"files in form: {formData.Files.Count}");
                 var stream = formData.Files.First().OpenReadStream();
-                var pictures = new Pictures(context);
                 var pictureUrl = await pictures.PutPicture(updatedProfile.Id, stream);
-                updatedProfile.PictureUrl = await pictures.GetPictureUrl(updatedProfile.Id);
             }
-
+            updatedProfile.PictureUrl = await pictures.GetPictureUrl(updatedProfile.Id);
             var profiles = new UserProfiles();
             await profiles.UpdateProfileAsync(updatedProfile);
             await RenderProfilePage(context);
